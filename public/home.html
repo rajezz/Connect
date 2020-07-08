@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Test App</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+	</script>
+	<style>
+		.navbar {
+			height: 60px;
+			border-bottom: 2px solid #dcdcdc;
+		}
+
+		#post-panel .card {
+			width: calc(100% - 40px);
+			margin: 20px;
+		}
+
+		.col {
+			min-height: calc(100% - 60px);
+		}
+
+		#profile-panel {
+			background-color: #f7f7f7;
+			border-right: 2px solid #dcdcdc;
+		}
+
+		#comment-panel {
+			background-color: #e7e7e7;
+			border-left: 2px solid #dcdcdc;
+		}
+
+		#fetching {
+			margin: 20px;
+			display: none;
+			font-size: 20px;
+		}
+
+		.counts {
+			display: inline-block;
+			margin: 0px 5px;
+		}
+
+		#post-panel .card-link {
+			color: #8c8c8c !important;
+		}
+
+		#post-panel .card-link:hover {
+			color: black !important;
+			cursor: pointer;
+			transition: all .3s ease-in;
+		}
+
+		#comment-panel .card {
+			margin: 15px 0px;
+			background-color: transparent;
+			border: none;
+		}
+
+		#comment-panel .card-body {
+			background-color: white;
+			margin: 0px 0px 2px 0px;
+			border-radius: 0px 0px 5px 5px;
+		}
+
+		#comment-panel .list-group {
+			background-color: transparent;
+		}
+
+		#comment-panel .list-group-item {
+			border-radius: 5px;
+			border: none;
+			display: flex;
+			margin: 2px 0px;
+		}
+
+		#comment-panel .heading {
+			font-weight: 500;
+			font-size: 14px;
+		}
+
+		#comment-panel .comment-tab {
+			border-radius: 5px !important;
+			margin: 2px 0px;
+		}
+
+		.input-group {
+			width: 85% !important;
+			display: inline-flex;
+		}
+
+		.input-group-prepend {
+			width: 27% !important;
+		}
+
+		.custom-file {
+			width: 100%;
+			height: 100% !important;
+		}
+
+		.custom-file-input {
+			height: 100% !important;
+		}
+
+		.custom-file-label {
+			height: 100% !important;
+			border-radius: 3px 0px 0px 3px !important;
+		}
+
+		.custom-file-label::after {
+			display: none;
+		}
+
+		textarea {
+			min-height: 65px !important;
+		}
+
+		#post-panel .comment-tab {
+			padding-top: 0px;
+		}
+
+		.comment-picture {
+			display: inline-block;
+			margin-top: auto;
+			margin-right: 10px;
+		}
+
+		.content {
+			display: inline-block;
+			margin: 0px;
+		}
+
+		.comment-picture img {
+			height: 40px !important;
+			display: inline-block;
+		}
+	</style>
+</head>
+
+<body>
+	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="#">Social Connect</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+			aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+			<ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+				<li class="nav-item active">
+					<a class="nav-link" href="/">Sign Out</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div id="profile-panel" class="col col-lg-2">
+
+			</div>
+			<div id="post-panel" class="col col-lg-6">
+				<div class="card">
+					<div class="card-body">
+						<p class="card-text">Share a Post</p>
+					</div>
+					<div class="card-body comment-tab">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="custom-file">
+									<input type="file" class="custom-file-input" id="post-file">
+									<label class="custom-file-label" for="inputGroupFile03">Attach picture</label>
+								</div>
+							</div>
+							<textarea id="post-textarea" class="form-control" aria-label="With textarea"></textarea>
+						</div>
+						<button id="postBtn" type="button" class="btn btn-light">Share</button>
+					</div>
+				</div>
+				<div id="fetching">Fetching posts.....</div>
+			</div>
+			<div id="comment-panel" class="col col-lg-4">
+				<!-- <div class="card">
+					<img class="card-img-top" src="http://lorempixel.com/640/480/food" alt="Card image cap">
+					<div class="card-body">
+						<p class="card-text">Some quick example text to build on the card title and make up the bulk of
+							the card's content.</p>
+					</div>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item">
+							<div class="comment-picture">
+								<img src="http://lorempixel.com/640/480/food">
+							</div>
+							<div class="content">
+								<i>
+									<div class="heading">commented by rajezz</div>
+								</i> Cras justo odio
+							</div>
+
+						</li>
+						<li class="list-group-item">
+							<i>
+								<div class="heading">commented by rajezz</div>
+							</i> Dapibus ac facilisis in
+						</li>
+						<li class="list-group-item">
+							<i>
+								<div class="heading">commented by rajezz</div>
+							</i> Vestibulum at eros
+						</li>
+					</ul>
+					<div class="card-body comment-tab">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="custom-file">
+									<input type="file" class="custom-file-input" id="inputGroupFile03">
+									<label class="custom-file-label" for="inputGroupFile03">Attach picture</label>
+								</div>
+							</div>
+							<textarea class="form-control" aria-label="With textarea"></textarea>
+						</div>
+						<button type="button" class="btn btn-light"><i class="fas fa-paper-plane"></i></button>
+					</div>
+				</div> -->
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js"></script>
+
+	<script src="./controller.js"></script>
+	<script type="text/javascript" src="./jquery.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			OnHomePageLoad();
+		});
+	</script>
+</body>
+
+</html>
