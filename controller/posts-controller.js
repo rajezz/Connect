@@ -5,6 +5,7 @@ var express = require('express');
 const faker = require('faker');
 const async = require('async');
 
+const baseUrl = 'http://localhost:3000/uploads/';
 const connectionParams = {
     host: 'localhost',
     user: 'root',
@@ -12,7 +13,7 @@ const connectionParams = {
     database: 'TestDB',
 };
 
-exports.getposts = function (req, res) {
+/* exports.getposts = function (req, res) {
     var posts = [];
     var start_index = req.query.start_index;
     //open connection
@@ -65,7 +66,84 @@ exports.getposts = function (req, res) {
         }
     });
     //getcomments(posts, res);
+}; */
+
+exports.getposts = function (req, res) {
+    var posts = [];
+    var start_index = parseInt(req.query.start_index);
+    async.waterfall([
+        function (callback) {
+            //open connection
+            var connection = mySql.createConnection(connectionParams);
+            connection.query('select post_id from posts order by post_id desc limit 1', function (err, result, field) {
+                connection.end();
+                if (result && result.length > 0) {
+                    callback(null, result[0].post_id);
+                } else {
+                    callback(null, 0);
+                }
+            });
+
+        },
+        function (post_id, callback) {
+            post_id = parseInt(post_id);
+            //open connection
+            var connection = mySql.createConnection(connectionParams);
+            connection.query('select posts.*, comments.content, comments.comment_pic, comments.user_id, comments.username from posts left JOIN comments ON posts.post_id=comments.post_id where posts.post_id <= ? and posts.post_id > ?', [post_id - start_index, post_id - start_index - 20], function (err, result, field) {
+                connection.end();
+                if (result) {
+                    var last_post_id = 0;
+                    var postdetails;
+                    result.forEach(post => {
+                        if (post.post_id == last_post_id) {
+                            postdetails.comments.push({
+                                user_id: post.user_id,
+                                comment_pic: post.comment_pic,
+                                content: post.content,
+                                post_id: post.post_id,
+                                username: post.username,
+                            });
+                        } else {
+                            if (post.content) {
+                                postdetails = {
+                                    image: post.picture,
+                                    desc: post.description,
+                                    likes: post.likes,
+                                    comments_count: post.comments,
+                                    post_id: post.post_id,
+                                    posted_on: post.posted_on,
+                                    comments: [{
+                                        user_id: post.user_id,
+                                        comment_pic: post.comment_pic,
+                                        content: post.content,
+                                        post_id: post.post_id,
+                                        username: post.username,
+                                    }],
+                                };
+                            } else {
+                                postdetails = {
+                                    image: post.picture,
+                                    desc: post.description,
+                                    likes: post.likes,
+                                    comments_count: post.comments,
+                                    post_id: post.post_id,
+                                    posted_on: post.posted_on,
+                                    comments: [],
+                                };
+                            }
+                            last_post_id = post.post_id;
+                            posts.push(postdetails);
+                        }
+                    });
+                    callback(null, posts)
+                }
+            });
+        },
+    ], function (err, posts) {
+        res.send({ posts: posts });
+    });
 };
+
 
 exports.generateposts = function (req, res) {
     for (let i = 0; i < 100; i++) {
@@ -107,19 +185,15 @@ exports.likePost = function (req, res) {
                 //open connection
                 var connection = mySql.createConnection(connectionParams);
                 connection.query('delete from likes where post_id=? and user_id=?', [post_id, user_id], function (remove_err, remove_result, remove_field) {
-                    if (remove_result) {
-                        connection.end();
-                        callback(null, 'decrement');
-                    }
+                    connection.end();
+                    callback(null, 'decrement');
                 });
             } else {
                 //open connection
                 var connection = mySql.createConnection(connectionParams);
                 connection.query('insert into likes (post_id, user_id) values (?, ?)', [post_id, user_id], function (add_err, add_result, add_field) {
-                    if (add_result) {
-                        connection.end();
-                        callback(null, 'increment');
-                    }
+                    connection.end();
+                    callback(null, 'increment');
                 });
             }
         },
@@ -136,7 +210,7 @@ exports.likePost = function (req, res) {
                         connection.end();
                         callback(null, 'failed', 'disliked');
                     }
-                    
+
                 });
             } else if (process == 'increment') {
                 //open connection
@@ -149,89 +223,61 @@ exports.likePost = function (req, res) {
                         connection.end();
                         callback(null, 'failed', 'liked');
                     }
-                    
+
                 });
             }
 
         }
     ], function (err, result, process) {
-        // result now equals to 'Task1 and Task2 completed'
         console.log(result);
         res.send({ message: result, process: process, });
     });
-
-
-    /* connection.query('select * from likes where post_id=? and user_id=?', [post_id, user_id], function (err, result, field) {
-        if (result && result.length > 0) {
-            connection.end();
-            connection.query('delete from likes where post_id=? and user_id=?', [post_id, user_id], function (remove_err, remove_result, remove_field) {
-                if (remove_result) {
-                    connection.end();
-                    connection.query('update posts set likes=likes-1 where post_id=? and user_id=?', [post_id, user_id], function (decrement_err, decrement_result, decrement_field) {
-                        if (decrement_result) {
-                            connection.end();
-                            res.send({ message: 'success'});
-                        }
-                        connection.end();
-                        res.send({ message: 'failed'});
-                    });
-                }
-            });
-        } else {
-            connection.end();
-            connection.query('insert into likes (post_id, user_id) values (?, ?)', [post_id, user_id], function (add_err, add_result, add_field) {
-                if (add_result) {
-                    connection.end();
-                    connection.query('update posts set likes=likes+1 where post_id=? and user_id=?', [post_id, user_id], function (increment_err, increment_result, increment_field) {
-                        if (increment_result) {
-                            connection.end();
-                            res.send({ message: 'success'});
-                        }
-                        connection.end();
-                        res.send({ message: 'failed'});
-                    });
-                }
-            });
-        }
-    }); */
 };
 
-
-/*function getcomments(post) {
-
-    connection.query('select * from comments where post_id=?', [post.post_id], function (comment_err, comment_result, comment_field) {
-        if (comment_err) {
-            console.log(comment_err);
-        }
-        if (comment_result && comment_result.length > 0) {
-            let comments = [];
-            comment_result.forEach(comment => {
-                comments.push({
-                    content: comment.content,
-                    type: comment.type,
-                    user_id: comment.user_id,
-                })
+exports.commentPost = function (req, res) {
+    var commentDetails = {
+        post_id: req.query.post_id,
+        user_id: req.query.user_id,
+        comment: req.query.comment,
+        pic_name: baseUrl + 'comments/' + req.query.pic_name,
+        username: req.query.username,
+    };
+    async.waterfall([
+        function (callback) {
+            //open connection
+            var connection = mySql.createConnection(connectionParams);
+            connection.query('update posts set comments=comments+1 where post_id=?', [commentDetails.post_id], function (err, result, field) {
+                connection.end();
+                callback(null, result);
             });
-            post.comments = comments;
-        }
-    });
-     posts.forEach(post => {
-        connection.query('select * from comments where post_id=?', [post.post_id], function (comment_err, comment_result, comment_field) {
-            if (comment_err) {
-                console.log(comment_err);
-            }
-            if (comment_result && comment_result.length > 0) {
-                let comments = [];
-                comment_result.forEach(comment => {
-                    comments.push({
-                        content: comment.content,
-                        type: comment.type,
-                        user_id: comment.user_id,
-                    })
-                });
-                post.comments = comments;
-            }
-        });
-    });
 
-}*/
+        },
+        function (result, callback) {
+            //result contain data from above function
+            if (result) {
+                //open connection
+                var connection = mySql.createConnection(connectionParams);
+                connection.query('insert into comments (post_id, user_id, comment_pic, content, username) values (?, ?, ?, ?, ?)', [commentDetails.post_id, commentDetails.user_id, commentDetails.pic_name, commentDetails.comment, commentDetails.username], function (insert_err, insert_result, insert_field) {
+                    connection.end();
+                    callback(null, 'success');
+                });
+            }
+        }
+    ], function (err, result) {
+        console.log(result);
+        res.send({ message: result });
+    });
+};
+
+exports.createPost = function (req, res) {
+    var postDetails = {
+        picture: baseUrl + 'posts/' + req.query.pic_name,
+        description: req.query.post_desc,
+    };
+    //open connection
+    var connection = mySql.createConnection(connectionParams);
+    connection.query('insert into posts (picture , description) values (?, ?)', [postDetails.picture, postDetails.description], function (err, result, field) {
+        connection.end();
+        res.send({ message: result });
+    });
+};

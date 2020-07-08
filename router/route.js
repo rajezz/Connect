@@ -10,6 +10,8 @@ var post_controller = require('../controller/posts-controller');
 
 var router = express.Router();
 
+const baseUrl = 'http://localhost:3000/uploads/';
+
 const connectionParams = {
     host: 'localhost',
     user: 'root',
@@ -21,8 +23,10 @@ router.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + '../../public/index.html'));
 });
 
+
+//send requested images
 router.get('/uploads/:dirpath/:filename', function (req, res) {
-    res.sendFile(__dirname + '../uploads/')
+    res.sendFile(path.join(__dirname + '../../uploads/' + req.params.dirpath +'/'+ req.params.filename));
 });
 
 router.get('/login', function (req, res) {
@@ -58,7 +62,7 @@ router.get('/register-user', function (req, res) {
         email: req.query.email,
         username: req.query.username,
         password: req.query.password,
-        profile_pic: req.query.profile_pic_name,
+        profile_pic: baseUrl + 'profile/' + req.query.profile_pic_name,
         dob: req.query.dob,
         address: req.query.address,
         phone_no: req.query.phone_no,
@@ -87,8 +91,14 @@ router.get('/register-user', function (req, res) {
 
     //res.end();
 });
+//upload profile pictures
+router.post('/upload/profile', image_uploader.uploadProfileImage);
 
-router.post('/upload/profile', image_uploader.uploadImage);
+//upload comment pictures
+router.post('/upload/comment', image_uploader.uploadCommentImage);
+
+//upload post pictures
+router.post('/upload/post', image_uploader.uploadPostImage);
 
 router.get('/route-to-register', function (req, res) {
     res.redirect('/register');

@@ -3,6 +3,7 @@
 var start_index = 0;
 var currentPosts = [];
 var currentUser;
+var selectedPost;
 
 $('#registerBtn').on('click', (event) => {
     const formdata = GetFormDataForRegister();
@@ -34,7 +35,7 @@ $('#signinBtn').on('click', (event) => {
                     SetSessionStorage(response.user);
                     window.location.assign('/home');
                 }
-                
+
             });
     } else {
         document.getElementById('login-form-invalid').style.display = 'block';
@@ -82,9 +83,12 @@ function fetchPosts() {
     document.getElementById('fetching').style.display = 'block';
     start_index = currentPosts.length;
     route.get('/getposts', { start_index: start_index }).done(function (response) {
+
+        document.getElementById('fetching').style.display = 'none';
         if (response.posts && response.posts.length) {
-            AddPostsToDOM(response.posts);
-            response.posts.forEach(post => {
+            let sortedPosts = response.posts.sort((a, b) => parseInt(b.post_id) - parseInt(a.post_id));
+            AddPostsToDOM(sortedPosts);
+            sortedPosts.forEach(post => {
                 currentPosts.push(post);
             });
         }
@@ -132,23 +136,43 @@ function UploadProfilePic() {
     var fd = new FormData();
     var image = document.getElementById("profile-pic").files[0];
     fd.append('image', image);
-    route.post('/upload/profile', fd).done(function (response) {}).fail(function () {});
+    route.post('/upload/profile', fd).done(function (response) { }).fail(function () { });
+}
+
+//image uploader
+function UploadCommentPic() {
+    var fd = new FormData();
+    var image = document.getElementById("comment-file").files[0];
+    if (image) {
+        fd.append('image', image);
+        route.post('/upload/comment', fd).done(function (response) { }).fail(function () { });
+    }
+}
+
+//image uploader
+function UploadPostPic() {
+    var fd = new FormData();
+    var image = document.getElementById("post-file").files[0];
+    if (image) {
+        fd.append('image', image);
+        route.post('/upload/post', fd).done(function (response) { }).fail(function () { });
+    }
 }
 
 function AddPostsToDOM(posts) {
-    document.getElementById('fetching').style.display = 'none';
     posts.forEach(post => {
+        let date = new Date(post.posted_on);
+        let formatted_date = date.toDateString();
         var $cardElement = '<div id="card-' + post.post_id + '" class="card">' +
-                                '<img class="card-img-top" src="' + post.image + '" alt="post image">' +
-                                '<div class="card-body">' +
-                                    '<p class="card-text">' + post.desc + '</p>' +
-                                '</div>' +
-                                '<div class="card-body">' +
-                                    '<a id="like-' + post.post_id + '" class="card-link"><div class="counts" id="like-count-' + post.post_id + '">' + post.likes + '</div><i class="fas fa-thumbs-up"></i></a>' +
-                                    '<a id="comment-' + post.post_id + '" class="card-link"><div class="counts" id="comment-count-' + post.post_id + '">' + post.comments_count + '</div><i class="fas fa-comments"></i></a>' +
-                                '</div>' +
-                            '</div>';
-        $('#post-panel').append($cardElement);
+            '<img class="card-img-top" src="' + post.image + '" alt="post image">' +
+            '<div class="card-body">' +
+            '<p class="card-text">' + post.desc + '</p>' +
+            '</div>' +
+            '<div class="card-body">' +
+            '<a id="like-' + post.post_id + '" class="card-link"><div class="counts" id="like-count-' + post.post_id + '">' + post.likes + '</div><i class="fas fa-thumbs-up"></i></a>' +
+            '<a id="comment-' + post.post_id + '" class="card-link"><div class="counts" id="comment-count-' + post.post_id + '">' + post.comments_count + '</div><i class="fas fa-comments"></i></a>' +
+            '<div class="posted-on">' +  'Posted on <span class="date">' + formatted_date + '</span></div></div></div>';
+        $('#wrapper').append($cardElement);
     });
 }
 //card link corresponds to like or comment button
@@ -162,22 +186,22 @@ $('body').on('click', '.card-link', (event) => {
     }
 });
 
-function OnLikeClicked (id) {
+function OnLikeClicked(id) {
     var inputdata = {
         post_id: id,
         user_id: currentUser.user_id,
     }
     route.get('/post/like', inputdata)
-            .done(function (response) {
-                if (response) {
-                    var currentLikes = parseInt(document.getElementById('like-count-' + id).innerHTML);
-                    if (response.process == 'liked') {
-                        document.getElementById('like-count-' + id).innerHTML = currentLikes + 1;
-                    } else if (response.process == 'disliked'){
-                        document.getElementById('like-count-' + id).innerHTML = currentLikes - 1;
-                    }
+        .done(function (response) {
+            if (response) {
+                var currentLikes = parseInt(document.getElementById('like-count-' + id).innerHTML);
+                if (response.process == 'liked') {
+                    document.getElementById('like-count-' + id).innerHTML = currentLikes + 1;
+                } else if (response.process == 'disliked') {
+                    document.getElementById('like-count-' + id).innerHTML = currentLikes - 1;
                 }
-    });
+            }
+        });
 }
 function GetSelectedComment(id) {
     //var selectedPost;
@@ -186,20 +210,20 @@ function GetSelectedComment(id) {
             return post;
         }
     }
-    
+
 }
-function OnCommentClicked (id) {
-    var selectedPost = GetSelectedComment(id);
+function OnCommentClicked(id) {
+    selectedPost = GetSelectedComment(id);
     var $CommentContent = '<div class="card"><img class="card-img-top" src="' + selectedPost.image + '" alt="Card image cap">' +
-                        '<div class="card-body"><p class="card-text">' + selectedPost.desc + '</p></div>' +
-                        '<ul class="list-group list-group-flush">';
+        '<div class="card-body"><p class="card-text">' + selectedPost.desc + '</p></div>' +
+        '<ul class="list-group list-group-flush">';
     selectedPost.comments.forEach(comment => {
         $CommentContent += '<li class="list-group-item"><div class="comment-picture"><img src="' + comment.comment_pic + '"></div><div class="content"><i><div class="heading">commented by ' + comment.username + '</div></i>' +
-                            comment.content + '</div></li>';
+            comment.content + '</div></li>';
     });
     $CommentContent += '</ul><div class="card-body comment-tab"><p class="card-text">Comment</p><div class="input-group"><div class="input-group-prepend"><div class="custom-file">' +
-                    '<input type="file" id="comment-file" class="custom-file-input"><label class="custom-file-label" for="inputGroupFile03">Attach picture</label>' +
-                    '</div></div><textarea id="comment-textarea" class="form-control" aria-label="With textarea"></textarea></div><button id="commentBtn" type="button" class="btn btn-light"><i class="fas fa-paper-plane"></i></button></div></div>';
+        '<input type="file" id="comment-file" class="custom-file-input"><label class="custom-file-label" for="inputGroupFile03">Attach picture</label>' +
+        '</div></div><textarea id="comment-textarea" class="form-control" aria-label="With textarea"></textarea></div><button id="commentBtn" type="button" class="btn btn-light"><i class="fas fa-paper-plane"></i></button></div></div>';
     $('#comment-panel').html($CommentContent);
 }
 function GetCommentDetails() {
@@ -207,13 +231,31 @@ function GetCommentDetails() {
     let pic_name = document.getElementById("comment-file").files[0] ? document.getElementById("comment-file").files[0].name : undefined;
     if (comment) {
         return {
+            post_id: selectedPost.post_id,
+            user_id: currentUser.user_id,
             comment: comment,
             pic_name: pic_name,
+            username: currentUser.username,
         };
     } else {
         return null;
     }
 }
+
+function UpdateComments(commentDetails) {
+    currentPosts.forEach(post => {
+        if (commentDetails.post_id == post.post_id) {
+            post.comments.push({
+                user_id: commentDetails.user_id,
+                comment_pic: 'http://localhost:3000/uploads/comments/' + commentDetails.pic_name,
+                content: commentDetails.comment,
+                post_id: commentDetails.post_id,
+                username: commentDetails.username,
+            });
+        }
+    });
+}
+
 function GetPostDetails() {
     let post_desc = $('#post-textarea').val();
     let pic_name = document.getElementById("post-file").files[0] ? document.getElementById("post-file").files[0].name : undefined;
@@ -227,20 +269,31 @@ function GetPostDetails() {
     }
 }
 
-$('document').on('click', '#commentBtn', (event) => {
+function ClearPostField() {
+    document.getElementById('post-textarea').value = '';
+    document.getElementById("post-file").value = '';
+}
+
+$('#comment-panel').on('click', '#commentBtn', (event) => {
     var commentDetails = GetCommentDetails();
     if (commentDetails) {
+        UploadCommentPic();
         route.get('/post/comment', commentDetails).done(res => {
-
+            $('#comment-panel').html('');
+            UpdateComments(commentDetails);
+            OnCommentClicked(commentDetails.post_id);
         });
     }
 });
 
-$('document').on('click', '#postBtn', (event) => {
+$('#post-panel').on('click', '#postBtn', (event) => {
     var postDetails = GetPostDetails();
     if (postDetails) {
+        UploadPostPic();
         route.get('/post/create', postDetails).done(res => {
-
+            currentPosts = [];
+            fetchPosts();
+            ClearPostField();
         });
     }
 });

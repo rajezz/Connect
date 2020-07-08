@@ -12,136 +12,7 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
 		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
 	</script>
-	<style>
-		.navbar {
-			height: 60px;
-			border-bottom: 2px solid #dcdcdc;
-		}
-
-		#post-panel .card {
-			width: calc(100% - 40px);
-			margin: 20px;
-		}
-
-		.col {
-			min-height: calc(100% - 60px);
-		}
-
-		#profile-panel {
-			background-color: #f7f7f7;
-			border-right: 2px solid #dcdcdc;
-		}
-
-		#comment-panel {
-			background-color: #e7e7e7;
-			border-left: 2px solid #dcdcdc;
-		}
-
-		#fetching {
-			margin: 20px;
-			display: none;
-			font-size: 20px;
-		}
-
-		.counts {
-			display: inline-block;
-			margin: 0px 5px;
-		}
-
-		#post-panel .card-link {
-			color: #8c8c8c !important;
-		}
-
-		#post-panel .card-link:hover {
-			color: black !important;
-			cursor: pointer;
-			transition: all .3s ease-in;
-		}
-
-		#comment-panel .card {
-			margin: 15px 0px;
-			background-color: transparent;
-			border: none;
-		}
-
-		#comment-panel .card-body {
-			background-color: white;
-			margin: 0px 0px 2px 0px;
-			border-radius: 0px 0px 5px 5px;
-		}
-
-		#comment-panel .list-group {
-			background-color: transparent;
-		}
-
-		#comment-panel .list-group-item {
-			border-radius: 5px;
-			border: none;
-			display: flex;
-			margin: 2px 0px;
-		}
-
-		#comment-panel .heading {
-			font-weight: 500;
-			font-size: 14px;
-		}
-
-		#comment-panel .comment-tab {
-			border-radius: 5px !important;
-			margin: 2px 0px;
-		}
-
-		.input-group {
-			width: 85% !important;
-			display: inline-flex;
-		}
-
-		.input-group-prepend {
-			width: 27% !important;
-		}
-
-		.custom-file {
-			width: 100%;
-			height: 100% !important;
-		}
-
-		.custom-file-input {
-			height: 100% !important;
-		}
-
-		.custom-file-label {
-			height: 100% !important;
-			border-radius: 3px 0px 0px 3px !important;
-		}
-
-		.custom-file-label::after {
-			display: none;
-		}
-
-		textarea {
-			min-height: 65px !important;
-		}
-
-		#post-panel .comment-tab {
-			padding-top: 0px;
-		}
-
-		.comment-picture {
-			display: inline-block;
-			margin-top: auto;
-			margin-right: 10px;
-		}
-
-		.content {
-			display: inline-block;
-			margin: 0px;
-		}
-
-		.comment-picture img {
-			height: 40px !important;
-			display: inline-block;
-		}
-	</style>
+	<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -167,6 +38,7 @@
 
 			</div>
 			<div id="post-panel" class="col col-lg-6">
+				<div id="wrapper">
 				<div class="card">
 					<div class="card-body">
 						<p class="card-text">Share a Post</p>
@@ -185,6 +57,7 @@
 					</div>
 				</div>
 				<div id="fetching">Fetching posts.....</div>
+				</div>
 			</div>
 			<div id="comment-panel" class="col col-lg-4">
 				<!-- <div class="card">
