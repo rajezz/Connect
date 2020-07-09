@@ -37,7 +37,7 @@ router.get('/login', function (req, res) {
     var connection = mySql.createConnection(connectionParams);
 
     if (user_mail && password) {
-        connection.query('select * from Users where email = ? and password = ?', [user_mail, password], (err, result, field) => {
+        connection.query('select * from users where email = ? and password = ?', [user_mail, password], (err, result, field) => {
             if (result.length > 0) {
                 let userdetail = {
                     email: result[0].email,
@@ -72,13 +72,13 @@ router.get('/register-user', function (req, res) {
     var connection = mySql.createConnection(connectionParams);
 
     if (user_details.email) {
-        connection.query('select * from Users where email = ?', [user_details.email], (err, result, field) => {
+        connection.query('select * from users where email = ?', [user_details.email], (err, result, field) => {
             if (err) {
                 res.send({ message: 'something went wrong' });
             } else if (result.length > 0) {
                 res.send({ message: 'email exists' });
             } else {
-                connection.query('insert into  Users (email, password, profile_pic, dob, phone_no, address, username) values (?, ?, ?, ?, ?, ?, ?)', [user_details.email, user_details.password, user_details.profile_pic, user_details.dob, user_details.phone_no, user_details.address, user_details.username], (err, result, field) => {
+                connection.query('insert into  users (email, password, profile_pic, dob, phone_no, address, username) values (?, ?, ?, ?, ?, ?, ?)', [user_details.email, user_details.password, user_details.profile_pic, user_details.dob, user_details.phone_no, user_details.address, user_details.username], (err, result, field) => {
                     if (err) {
                         res.send({ message: 'something went wrong' });
                     } else if (result.affectedRows > 0) {
