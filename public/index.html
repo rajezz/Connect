@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Test App</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    
+
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
@@ -26,6 +26,13 @@
 
     .btn {
       margin-top: 20px;
+    }
+
+    button:active,
+    button:focus,
+    input:focus,
+    input:active {
+      box-shadow: none !important;
     }
 
     .form-text {
@@ -51,8 +58,13 @@
       content: "*";
       color: red;
     }
+
+    .success {
+      color: green !important;
+    }
+
     /* spinner */
-    .fa-spinner{
+    .fa-spinner {
       margin-left: 10px;
       display: none;
     }
@@ -82,12 +94,8 @@
       <small id="login-failed" class="form-text text-muted">
         Login failed. Email ID and/or password is incorrect or email ID is not registered.
       </small>
-      <!-- 
-      <div class="form-group form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">Check me out</label>
-      </div> -->
-      <button id="signinBtn" type="button" class="btn btn-primary">Signin<i id="loading" class="fa fa-spinner fa-spin"></i></button>
+      <button id="signinBtn" type="button" class="btn btn-primary">Signin<i id="loading"
+          class="fa fa-spinner fa-spin"></i></button>
       <button onclick="location.href='/register'" type="button" class="btn btn-light">Sign up</button>
     </form>
   </div>

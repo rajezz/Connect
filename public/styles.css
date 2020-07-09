@@ -105,6 +105,7 @@ body {
     width: 85% !important;
     display: inline-flex;
 }
+
 .input-group-prepend {
     width: 27% !important;
 }
@@ -117,19 +118,23 @@ body {
     width: 100%;
     height: 100% !important;
 }
+
 #commentBtn img {
     height: 24px;
     width: auto;
 }
+
 #commentBtn {
     margin: auto;
     background-color: transparent;
     border: none;
 }
+
 #commentBtn:hover {
     background-color: transparent;
     border: none;
 }
+
 .custom-file-input {
     height: 100% !important;
 }
@@ -142,9 +147,11 @@ body {
 .custom-file-label::after {
     display: none;
 }
+
 textarea.form-control {
     min-height: 65px;
 }
+
 #comment-panel textarea.form-control {
     height: 42px;
     min-height: 42px;
@@ -168,22 +175,74 @@ textarea.form-control {
     height: 40px !important;
     display: inline-block;
 }
+
 .comment-tab img {
     height: 24px;
 }
+
 .posted-on {
     display: inline-block;
     float: right;
 }
+
 span.date {
     font-weight: 600;
 }
+
 .list-group .card {
     background-color: white !important;
 }
+
 .comment-text {
     display: flex;
 }
+
 .share-post {
     padding: 10px 20px;
+}
+
+button:active,
+button:focus {
+    box-shadow: none !important;
+}
+
+#profile-pic-holder img {
+    vertical-align: middle;
+    border-style: none;
+    min-width: 100%;
+    max-width: 250px;
+    min-height: 100%;
+    max-height: 250px;
+}
+p.username {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: -2px;
+}
+p.email {
+    font-size: 13px;
+}
+p.dob {
+    font-size: 14px;
+    margin-top: 11px !important;
+    margin-bottom: 2px;
+}
+p.ph-no {
+    font-size: 14px;
+}
+.profile-details img {
+    width: 16px !important;
+    margin: 1px 7px 1px 0px;
+    border-radius: 0px !important;
+}
+a.navbar-brand {
+    font-weight: 600;
+    color: #797979 !important;
+}
+#profile-pic-holder {
+    border-radius: 100px;
+    overflow: hidden;
+    height: 160px;
+    margin: 26px 10px;
+    width: 160px;
 }

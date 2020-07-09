@@ -10,13 +10,20 @@ var post_controller = require('../controller/posts-controller');
 
 var router = express.Router();
 
-const baseUrl = 'https://socially-connect.herokuapp.com/uploads/';
+const baseUrl = 'http://localhost:3000/uploads/';
 
-const connectionParams = {
+const remoteConnectionParams = {
     host: 'bdwkslwwzlyvmttitazj-mysql.services.clever-cloud.com',
     user: 'ug38a2qvmwr4d1jn',
     password: 'loc9aHkJlcUOxIEMHqw2',
     database: 'bdwkslwwzlyvmttitazj',
+};
+
+const connectionParams = {
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    database: 'TestDB',
 };
 
 router.get('/', function (req, res) {

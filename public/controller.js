@@ -7,7 +7,7 @@ var selectedPost;
 var isFetching = false;
 
 $('#registerBtn').on('click', (event) => {
-    document.getElementById('loading').style.display = 'block';
+    document.getElementById('loading').style.display = 'inline-block';
     const formdata = GetFormDataForRegister();
     if (validateFormForRegister(formdata)) {
         route.get('/register-user', formdata)
@@ -27,7 +27,7 @@ $('#registerBtn').on('click', (event) => {
 });
 
 $('#signinBtn').on('click', (event) => {
-    document.getElementById('loading').style.display = 'block';
+    document.getElementById('loading').style.display = 'inline-block';
     const formdata = GetFormDataForLogin();
     if (validateFormForLogin(formdata)) {
         route.get('/login', formdata)
@@ -90,7 +90,24 @@ function OnHomePageLoad() {
         }
     });
 }
+function SetProfileDetails() {
+    var $UserDetail;
+    if (currentUser.profile_pic) {
+        $UserDetail = '<img src="' + currentUser.profile_pic + '">';
+    } else {
+        $UserDetail = '<img src="./assets/user.svg">';
+    }
+    $('#profile-pic-holder').append($UserDetail);
+    let dob = new Date(currentUser.dob);
+
+    var $ProfileDetails = '<p class="username">' + currentUser.username + '</p>' +
+                        '<p class="email">' + currentUser.email + '</p>' +
+                        '<p class="dob"><img src="./assets/calendar.svg">' + dob.toLocaleDateString() + '</p>' +
+                        '<p class="ph-no"><img src="./assets/phone-no.svg">' + currentUser.phone_no + '</p>';
+    $('#profile-details').append($ProfileDetails);
+}
 function fetchPosts() {
+    SetProfileDetails();
     document.getElementById('fetching').style.display = 'block';
     start_index = currentPosts.length;
     route.get('/getposts', { start_index: start_index }).done(function (response) {
@@ -232,21 +249,21 @@ function OnCommentClicked(id) {
     if (selectedPost.image) {
         if (selectedPost.desc) {
             $CommentContent += '<img class="card-img-top" src="' + selectedPost.image + '" alt="Card image cap">' +
-                            '<div class="card-body"><p class="card-text">' + selectedPost.desc + '</p></div>' +
-                            '<ul class="list-group list-group-flush">';
+                '<div class="card-body"><p class="card-text">' + selectedPost.desc + '</p></div>' +
+                '<ul class="list-group list-group-flush">';
         } else {
             $CommentContent += '<img class="card-img-top" src="' + selectedPost.image + '" alt="Card image cap">' +
-                            '<ul class="list-group list-group-flush">';
+                '<ul class="list-group list-group-flush">';
         }
     } else {
         if (selectedPost.desc) {
             $CommentContent += '<div class="card-body"><p class="card-text">' + selectedPost.desc + '</p></div>' +
-                            '<ul class="list-group list-group-flush">';
+                '<ul class="list-group list-group-flush">';
         } else {
             $CommentContent += '<ul class="list-group list-group-flush">';
         }
     }
-        
+
     selectedPost.comments.forEach(comment => {
         $CommentContent += '<li class="list-group-item card">';
 
@@ -295,7 +312,7 @@ function UpdateComments(commentDetails) {
         if (commentDetails.post_id == post.post_id) {
             post.comments.push({
                 user_id: commentDetails.user_id,
-                comment_pic: commentDetails.pic_name != undefined ? 'https://socially-connect.herokuapp.com/uploads/comments/' + commentDetails.pic_name : null,
+                comment_pic: commentDetails.pic_name != undefined ? 'http://localhost:3000/uploads/comments/' + commentDetails.pic_name : null,
                 content: commentDetails.comment,
                 post_id: commentDetails.post_id,
                 username: commentDetails.username,

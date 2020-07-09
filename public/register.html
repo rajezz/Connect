@@ -10,7 +10,7 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-        
+
     </script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
@@ -39,15 +39,31 @@
             font-weight: 600;
         }
 
-        .form-group label:after, .input-group .input-group-text:after {
+        .form-group label:after,
+        .input-group .input-group-text:after {
             content: "*";
             color: red;
         }
+
+        .success {
+            color: green !important;
+        }
+
         /* spinner */
-    .fa-spinner{
-      margin-left: 10px;
-      display: none;
-    }
+        .fa-spinner {
+            margin-left: 10px;
+            display: none;
+        }
+
+        button:active,
+        button:focus,
+        input:focus,
+        input:active,
+        .custom-file-label:focus,
+        .custom-file-label:active,
+        .custom-file-label {
+            box-shadow: none !important;
+        }
     </style>
 </head>
 
@@ -113,12 +129,8 @@
             <small id="register-success" class="form-text success">
                 Sucessfully Registered. Please sign in.
             </small>
-            <!-- 
-      <div class="form-group form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">Check me out</label>
-      </div> -->
-            <button id="registerBtn" type="button" class="btn btn-primary">Register<i id="loading" class="fa fa-spinner fa-spin"></i></button>
+            <button id="registerBtn" type="button" class="btn btn-primary">Register<i id="loading"
+                    class="fa fa-spinner fa-spin"></i></button>
             <button onclick="location.href='/'" type="button" class="btn btn-light">Sign In</button>
         </form>
     </div>
@@ -132,22 +144,6 @@
     <script src="./controller.js"></script>
     <script type="text/javascript" src="./jquery.min.js"></script>
     <script>
-        /* this is event listener to remove error messages */
-        /* document.getElementById('email').addEventListener('change', (e) => {
-            document.getElementById('register-form-invalid').style.display = 'none';
-            document.getElementById('register-failed').style.display = 'none';
-            document.getElementById('register-success').style.display = 'none';
-        });
-        document.getElementById('password').addEventListener('change', (e) => {
-            document.getElementById('register-form-invalid').style.display = 'none';
-            document.getElementById('register-failed').style.display = 'none';
-            document.getElementById('register-success').style.display = 'none';
-        });
-        document.getElementById('confirm-password').addEventListener('change', (e) => {
-            document.getElementById('register-form-invalid').style.display = 'none';
-            document.getElementById('register-failed').style.display = 'none';
-            document.getElementById('register-success').style.display = 'none';
-        }); */
         function hideErrorMessages() {
             document.getElementById('register-form-invalid').style.display = 'none';
             document.getElementById('register-failed').style.display = 'none';

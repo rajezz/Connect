@@ -5,69 +5,21 @@ var express = require('express');
 const faker = require('faker');
 const async = require('async');
 
-const baseUrl = 'https://socially-connect.herokuapp.com/uploads/';
+const baseUrl = 'http://localhost:3000/uploads/';
 
-const connectionParams = {
+const remoteConnectionParams = {
     host: 'bdwkslwwzlyvmttitazj-mysql.services.clever-cloud.com',
     user: 'ug38a2qvmwr4d1jn',
     password: 'loc9aHkJlcUOxIEMHqw2',
     database: 'bdwkslwwzlyvmttitazj',
 };
 
-/* exports.getposts = function (req, res) {
-    var posts = [];
-    var start_index = req.query.start_index;
-    //open connection
-    var connection = mySql.createConnection(connectionParams);
-
-    connection.query('select posts.*, comments.content, comments.comment_pic, comments.user_id from posts left JOIN comments ON posts.post_id=comments.post_id where posts.post_id > ? and posts.post_id <= ?;', [start_index, parseInt(start_index) + 20], function (err, result, field) {
-        if (result) {
-            var last_post_id = 0;
-            var postdetails;
-            result.forEach(post => {
-                if (post.post_id == last_post_id) {
-                    postdetails.comments.push({
-                        user_id: post.user_id,
-                        comment_pic: post.comment_pic,
-                        content: post.content,
-                        post_id: post.post_id,
-                    });
-                } else {
-                    if (post.content) {
-                        postdetails = {
-                            image: post.picture,
-                            desc: post.description,
-                            likes: post.likes,
-                            comments_count: post.comments,
-                            post_id: post.post_id,
-                            comments: [{
-                                user_id: post.user_id,
-                                comment_pic: post.comment_pic,
-                                content: post.content,
-                                post_id: post.post_id,
-                            }],
-                        };
-                    } else {
-                        postdetails = {
-                            image: post.picture,
-                            desc: post.description,
-                            likes: post.likes,
-                            comments_count: post.comments,
-                            post_id: post.post_id,
-                            comments: [],
-                        };
-                    }
-                    last_post_id = post.post_id;
-                    posts.push(postdetails);
-                }
-
-            });
-            connection.end();
-            res.send({ posts: posts });
-        }
-    });
-    //getcomments(posts, res);
-}; */
+const connectionParams = {
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    database: 'TestDB',
+};
 
 exports.getposts = function (req, res) {
     var posts = [];
