@@ -102,9 +102,9 @@ function SetProfileDetails() {
     let dob = new Date(currentUser.dob);
 
     var $ProfileDetails = '<p class="username">' + currentUser.username + '</p>' +
-                        '<p class="email">' + currentUser.email + '</p>' +
-                        '<p class="dob"><img src="./assets/calendar.svg">' + dob.toLocaleDateString() + '</p>' +
-                        '<p class="ph-no"><img src="./assets/phone-no.svg">' + currentUser.phone_no + '</p>';
+        '<p class="email">' + currentUser.email + '</p>' +
+        '<p class="dob"><img src="./assets/calendar.svg">' + dob.toLocaleDateString() + '</p>' +
+        '<p class="ph-no"><img src="./assets/phone-no.svg">' + currentUser.phone_no + '</p>';
     $('#profile-details').append($ProfileDetails);
 }
 function fetchPosts() {

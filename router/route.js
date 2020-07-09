@@ -33,7 +33,7 @@ router.get('/', function (req, res) {
 
 //send requested images
 router.get('/uploads/:dirpath/:filename', function (req, res) {
-    res.sendFile(path.join(__dirname + '../../uploads/' + req.params.dirpath +'/'+ req.params.filename));
+    res.sendFile(path.join(__dirname + '../../uploads/' + req.params.dirpath + '/' + req.params.filename));
 });
 
 router.get('/login', function (req, res) {
