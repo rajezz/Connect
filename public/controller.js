@@ -295,7 +295,7 @@ function UpdateComments(commentDetails) {
         if (commentDetails.post_id == post.post_id) {
             post.comments.push({
                 user_id: commentDetails.user_id,
-                comment_pic: commentDetails.pic_name != undefined ? 'http://localhost:3000/uploads/comments/' + commentDetails.pic_name : null,
+                comment_pic: commentDetails.pic_name != undefined ? 'https://socially-connect.herokuapp.com/uploads/comments/' + commentDetails.pic_name : null,
                 content: commentDetails.comment,
                 post_id: commentDetails.post_id,
                 username: commentDetails.username,

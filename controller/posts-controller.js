@@ -5,12 +5,13 @@ var express = require('express');
 const faker = require('faker');
 const async = require('async');
 
-const baseUrl = 'http://localhost:3000/uploads/';
+const baseUrl = 'https://socially-connect.herokuapp.com/uploads/';
+
 const connectionParams = {
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'TestDB',
+    host: 'bdwkslwwzlyvmttitazj-mysql.services.clever-cloud.com',
+    user: 'ug38a2qvmwr4d1jn',
+    password: 'loc9aHkJlcUOxIEMHqw2',
+    database: 'bdwkslwwzlyvmttitazj',
 };
 
 /* exports.getposts = function (req, res) {

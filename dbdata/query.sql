@@ -25,8 +25,10 @@ DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   `post_id` int NOT NULL,
   `user_id` int NOT NULL,
-  `type` varchar(15) DEFAULT NULL,
-  `content` varchar(255) DEFAULT NULL
+  `comment_pic` varchar(255) DEFAULT NULL,
+  `content` varchar(255) DEFAULT NULL,
+  `username` varchar(20) DEFAULT NULL,
+  `user_pic` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -74,6 +76,7 @@ CREATE TABLE `posts` (
   `description` varchar(255) DEFAULT NULL,
   `likes` int DEFAULT '0',
   `comments` int DEFAULT '0',
+  `posted_on` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`post_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -103,6 +106,7 @@ CREATE TABLE `users` (
   `phone_no` bigint DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `user_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -125,4 +129,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-07-08  8:59:25
+-- Dump completed on 2020-07-09 12:55:27
