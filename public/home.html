@@ -39,24 +39,27 @@
 			</div>
 			<div id="post-panel" class="col col-lg-6">
 				<div id="wrapper">
-				<div class="card">
-					<div class="card-body">
-						<p class="card-text">Share a Post</p>
-					</div>
-					<div class="card-body comment-tab">
-						<div class="input-group">
-							<div class="input-group-prepend">
-								<div class="custom-file">
-									<input type="file" class="custom-file-input" id="post-file">
-									<label class="custom-file-label" for="inputGroupFile03">Attach picture</label>
-								</div>
-							</div>
-							<textarea id="post-textarea" class="form-control" aria-label="With textarea"></textarea>
+					<div class="card">
+						<div class="card-body share-post">
+							<p class="card-text">Share a Post</p>
 						</div>
-						<button id="postBtn" type="button" class="btn btn-light">Share</button>
+						<div class="card-body comment-tab">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<div class="custom-file">
+										<input type="file" class="custom-file-input" id="post-file">
+										<label class="custom-file-label" for="inputGroupFile03">Share picture</label>
+									</div>
+								</div>
+								<textarea id="post-textarea" class="form-control" placeholder="what's on your mind....."></textarea>
+							</div>
+							<button id="postBtn" type="button" title="Share post" class="btn btn-light">Share</button>
+						</div>
 					</div>
-				</div>
-				<div id="fetching">Fetching posts.....</div>
+					<div id="fetching">Fetching posts.....</div>
+					<div id="posts">
+						<!-- here comes the posts -->
+					</div>
 				</div>
 			</div>
 			<div id="comment-panel" class="col col-lg-4">

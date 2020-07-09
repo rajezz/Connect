@@ -4,8 +4,10 @@ var start_index = 0;
 var currentPosts = [];
 var currentUser;
 var selectedPost;
+var isFetching = false;
 
 $('#registerBtn').on('click', (event) => {
+    document.getElementById('loading').style.display = 'block';
     const formdata = GetFormDataForRegister();
     if (validateFormForRegister(formdata)) {
         route.get('/register-user', formdata)
@@ -21,9 +23,11 @@ $('#registerBtn').on('click', (event) => {
     } else {
         document.getElementById('register-form-invalid').style.display = 'block';
     }
+    document.getElementById('loading').style.display = 'none';
 });
 
 $('#signinBtn').on('click', (event) => {
+    document.getElementById('loading').style.display = 'block';
     const formdata = GetFormDataForLogin();
     if (validateFormForLogin(formdata)) {
         route.get('/login', formdata)
@@ -40,6 +44,7 @@ $('#signinBtn').on('click', (event) => {
     } else {
         document.getElementById('login-form-invalid').style.display = 'block';
     }
+    document.getElementById('loading').style.display = 'none';
 });
 function validateFormForRegister(formdata) {
     if (formdata.email && formdata.username && formdata.password && formdata.confirm_password && (formdata.password == formdata.confirm_password) && formdata.phone_no && formdata.address && formdata.dob && formdata.profile_pic_name) {
@@ -78,6 +83,12 @@ function OnHomePageLoad() {
     } else {
         window.location.assign('/');
     }
+    document.getElementById('post-panel').addEventListener('scroll', (e) => {
+        if (!isFetching && e.target.scrollHeight - (e.target.scrollTop + e.target.getBoundingClientRect().height) < 750) {
+            isFetching = true;
+            fetchPosts();
+        }
+    });
 }
 function fetchPosts() {
     document.getElementById('fetching').style.display = 'block';
@@ -91,6 +102,7 @@ function fetchPosts() {
             sortedPosts.forEach(post => {
                 currentPosts.push(post);
             });
+            isFetching = false;
         }
     });
 }
@@ -163,16 +175,18 @@ function AddPostsToDOM(posts) {
     posts.forEach(post => {
         let date = new Date(post.posted_on);
         let formatted_date = date.toDateString();
-        var $cardElement = '<div id="card-' + post.post_id + '" class="card">' +
-            '<img class="card-img-top" src="' + post.image + '" alt="post image">' +
-            '<div class="card-body">' +
-            '<p class="card-text">' + post.desc + '</p>' +
-            '</div>' +
-            '<div class="card-body">' +
-            '<a id="like-' + post.post_id + '" class="card-link"><div class="counts" id="like-count-' + post.post_id + '">' + post.likes + '</div><i class="fas fa-thumbs-up"></i></a>' +
-            '<a id="comment-' + post.post_id + '" class="card-link"><div class="counts" id="comment-count-' + post.post_id + '">' + post.comments_count + '</div><i class="fas fa-comments"></i></a>' +
-            '<div class="posted-on">' +  'Posted on <span class="date">' + formatted_date + '</span></div></div></div>';
-        $('#wrapper').append($cardElement);
+        var $cardElement = '<div id="card-' + post.post_id + '" class="card">';
+        if (post.image) {
+            $cardElement += '<img class="card-img-top" src="' + post.image + '" alt="post image">';
+        }
+        $cardElement += '';
+        if (post.desc) {
+            $cardElement += '<div class="card-body"><p class="card-text">' + post.desc + '</p></div>'
+        }
+        $cardElement += '<div class="card-body"><a title="Like" id="like-' + post.post_id + '" class="card-link"><div class="counts" id="like-count-' + post.post_id + '">' + post.likes + '</div><i class="fas fa-thumbs-up"></i></a>' +
+            '<a title="Comment" id="comment-' + post.post_id + '" class="card-link"><div class="counts" id="comment-count-' + post.post_id + '">' + post.comments_count + '</div><i class="fas fa-comments"></i></a>' +
+            '<div class="posted-on">' + 'Posted on <span class="date">' + formatted_date + '</span></div></div></div>';
+        $('#posts').append($cardElement);
     });
 }
 //card link corresponds to like or comment button
@@ -214,28 +228,62 @@ function GetSelectedComment(id) {
 }
 function OnCommentClicked(id) {
     selectedPost = GetSelectedComment(id);
-    var $CommentContent = '<div class="card"><img class="card-img-top" src="' + selectedPost.image + '" alt="Card image cap">' +
-        '<div class="card-body"><p class="card-text">' + selectedPost.desc + '</p></div>' +
-        '<ul class="list-group list-group-flush">';
+    var $CommentContent = '<div class="card">';
+    if (selectedPost.image) {
+        if (selectedPost.desc) {
+            $CommentContent += '<img class="card-img-top" src="' + selectedPost.image + '" alt="Card image cap">' +
+                            '<div class="card-body"><p class="card-text">' + selectedPost.desc + '</p></div>' +
+                            '<ul class="list-group list-group-flush">';
+        } else {
+            $CommentContent += '<img class="card-img-top" src="' + selectedPost.image + '" alt="Card image cap">' +
+                            '<ul class="list-group list-group-flush">';
+        }
+    } else {
+        if (selectedPost.desc) {
+            $CommentContent += '<div class="card-body"><p class="card-text">' + selectedPost.desc + '</p></div>' +
+                            '<ul class="list-group list-group-flush">';
+        } else {
+            $CommentContent += '<ul class="list-group list-group-flush">';
+        }
+    }
+        
     selectedPost.comments.forEach(comment => {
-        $CommentContent += '<li class="list-group-item"><div class="comment-picture"><img src="' + comment.comment_pic + '"></div><div class="content"><i><div class="heading">commented by ' + comment.username + '</div></i>' +
-            comment.content + '</div></li>';
+        $CommentContent += '<li class="list-group-item card">';
+
+        if (comment.comment_pic) {
+            $CommentContent += '<img class="card-img-top" src="' + comment.comment_pic + '" alt="post image">';
+        }
+        if (comment.user_pic) {
+            if (comment.content) {
+                $CommentContent += '<div class="comment-text"><div class="comment-picture"><img src="' + comment.user_pic + '"></div><div class="content"><i><div class="heading">commented by ' + comment.username + '</div></i><div>' + comment.content + '</div></div></div></li>';
+            } else {
+                $CommentContent += '<div class="comment-text"><div class="comment-picture"><img src="' + comment.user_pic + '"></div><div class="content"><i><div class="heading">commented by ' + comment.username + '</div></i></div></div></li>';
+            }
+
+        } else {
+            if (comment.content) {
+                $CommentContent += '<div class="comment-text"><div class="comment-picture"><img src="./assets/user.svg"></div><div class="content"><i><div class="heading">commented by ' + comment.username + '</div></i><div>' + comment.content + '</div></div></div></li>';
+            } else {
+                $CommentContent += '<div class="comment-text"><div class="comment-picture"><img src="./assets/user.svg"></div><div class="content"><i><div class="heading">commented by ' + comment.username + '</div></i></div></div></li>';
+            }
+        }
     });
     $CommentContent += '</ul><div class="card-body comment-tab"><p class="card-text">Comment</p><div class="input-group"><div class="input-group-prepend"><div class="custom-file">' +
-        '<input type="file" id="comment-file" class="custom-file-input"><label class="custom-file-label" for="inputGroupFile03">Attach picture</label>' +
-        '</div></div><textarea id="comment-textarea" class="form-control" aria-label="With textarea"></textarea></div><button id="commentBtn" type="button" class="btn btn-light"><i class="fas fa-paper-plane"></i></button></div></div>';
+        '<input type="file" id="comment-file" class="custom-file-input"><label class="custom-file-label" for="inputGroupFile03"><img src="./assets/file-upload.svg"></label>' +
+        '</div></div><textarea id="comment-textarea" class="form-control" placeholder="Type a comment....."></textarea></div><button title="Comment" id="commentBtn" type="button" class="btn btn-light"><img src="./assets/comment.svg"></button></div></div>';
     $('#comment-panel').html($CommentContent);
 }
 function GetCommentDetails() {
     let comment = $('#comment-textarea').val();
     let pic_name = document.getElementById("comment-file").files[0] ? document.getElementById("comment-file").files[0].name : undefined;
-    if (comment) {
+    if (comment || pic_name) {
         return {
             post_id: selectedPost.post_id,
             user_id: currentUser.user_id,
             comment: comment,
             pic_name: pic_name,
             username: currentUser.username,
+            user_pic: currentUser.profile_pic,
         };
     } else {
         return null;
@@ -247,10 +295,11 @@ function UpdateComments(commentDetails) {
         if (commentDetails.post_id == post.post_id) {
             post.comments.push({
                 user_id: commentDetails.user_id,
-                comment_pic: 'http://localhost:3000/uploads/comments/' + commentDetails.pic_name,
+                comment_pic: commentDetails.pic_name != undefined ? 'http://localhost:3000/uploads/comments/' + commentDetails.pic_name : null,
                 content: commentDetails.comment,
                 post_id: commentDetails.post_id,
                 username: commentDetails.username,
+                user_pic: commentDetails.user_pic,
             });
         }
     });
@@ -259,7 +308,7 @@ function UpdateComments(commentDetails) {
 function GetPostDetails() {
     let post_desc = $('#post-textarea').val();
     let pic_name = document.getElementById("post-file").files[0] ? document.getElementById("post-file").files[0].name : undefined;
-    if (post_desc && pic_name) {
+    if (post_desc || pic_name) {
         return {
             post_desc: post_desc,
             pic_name: pic_name,
@@ -277,7 +326,9 @@ function ClearPostField() {
 $('#comment-panel').on('click', '#commentBtn', (event) => {
     var commentDetails = GetCommentDetails();
     if (commentDetails) {
-        UploadCommentPic();
+        if (commentDetails.pic_name) {
+            UploadCommentPic();
+        }
         route.get('/post/comment', commentDetails).done(res => {
             $('#comment-panel').html('');
             UpdateComments(commentDetails);
@@ -289,9 +340,12 @@ $('#comment-panel').on('click', '#commentBtn', (event) => {
 $('#post-panel').on('click', '#postBtn', (event) => {
     var postDetails = GetPostDetails();
     if (postDetails) {
-        UploadPostPic();
+        if (postDetails.pic_name) {
+            UploadPostPic();
+        }
         route.get('/post/create', postDetails).done(res => {
             currentPosts = [];
+            document.getElementById('posts').innerHTML = '';
             fetchPosts();
             ClearPostField();
         });

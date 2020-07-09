@@ -10,7 +10,9 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+        
     </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         .login-panel {
             width: 500px !important;
@@ -22,13 +24,30 @@
             border-radius: 10px;
         }
 
-        .alert{
+        .form-text {
+            margin: 0px 10px 0px 0px;
+            color: red !important;
             display: none;
         }
+
+        .btn {
+            margin-top: 20px;
+        }
+
         .heading {
             font-size: 30px;
             font-weight: 600;
         }
+
+        .form-group label:after, .input-group .input-group-text:after {
+            content: "*";
+            color: red;
+        }
+        /* spinner */
+    .fa-spinner{
+      margin-left: 10px;
+      display: none;
+    }
     </style>
 </head>
 
@@ -40,65 +59,66 @@
             </div>
             <div class="form-group">
                 <label for="email">Email address</label>
-                <input type="email" class="form-control" name="user_email" id="email"
+                <input type="email" class="form-control" name="user_email" id="email" onchange="hideErrorMessages()"
                     aria-describedby="emailHelp" placeholder="Enter email">
                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
                     else.</small>
             </div>
             <div class="form-group">
                 <label for="email">Username</label>
-                <input type="text" class="form-control" name="username" id="username" placeholder="Enter Username">
+                <input type="text" class="form-control" name="username" id="username" onchange="hideErrorMessages()"
+                    placeholder="Enter Username">
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" name="user_password" id="password"
-                    placeholder="Password">
+                <input type="password" class="form-control" name="user_password" onchange="hideErrorMessages()"
+                    id="password" placeholder="Password">
             </div>
             <div class="form-group">
                 <label for="confirm-password">Confirm Password</label>
-                <input type="password" class="form-control" name="user_confirm_password" id="confirm-password"
-                    placeholder="Confirm Password">
+                <input type="password" class="form-control" name="user_confirm_password" onchange="hideErrorMessages()"
+                    id="confirm-password" placeholder="Confirm Password">
             </div>
             <div class="form-group">
                 <label for="phone-no">Phone Number</label>
-                <input type="tel" class="form-control" name="user_phone_no" id="phone-no"
+                <input type="tel" class="form-control" name="user_phone_no" onchange="hideErrorMessages()" id="phone-no"
                     placeholder="Phone Number">
             </div>
             <div class="form-group">
                 <label for="address">Address</label>
-                <input type="text" class="form-control" name="user_address" id="address"
+                <input type="text" class="form-control" name="user_address" onchange="hideErrorMessages()" id="address"
                     placeholder="Address">
             </div>
             <div class="form-group">
                 <label for="dob">Date of Birth</label>
-                <input type="date" class="form-control" name="user_dob" id="dob"
+                <input type="date" class="form-control" name="user_dob" id="dob" onchange="hideErrorMessages()"
                     placeholder="Date of Birth">
             </div>
-            <div class="input-group mb-3">
+            <div class="input-group mb-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="profile-pic-group">Upload</span>
                 </div>
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="profile-pic"
+                    <input type="file" class="custom-file-input" id="profile-pic" onchange="hideErrorMessages()"
                         aria-describedby="profile-pic-group">
                     <label class="custom-file-label" for="profile-pic">Choose file</label>
                 </div>
             </div>
-            <div id="register-form-invalid" class="alert alert-warning" role="alert">
+            <small id="register-form-invalid" class="form-text">
                 Please fill all field.
-            </div>
-            <div id="register-failed" class="alert alert-warning" role="alert">
+            </small>
+            <small id="register-failed" class="form-text">
                 Registration Failed. Email id already exist
-            </div>
-            <div id="register-success" class="alert alert-success" role="alert">
+            </small>
+            <small id="register-success" class="form-text success">
                 Sucessfully Registered. Please sign in.
-            </div>
+            </small>
             <!-- 
       <div class="form-group form-check">
         <input type="checkbox" class="form-check-input" id="exampleCheck1">
         <label class="form-check-label" for="exampleCheck1">Check me out</label>
       </div> -->
-            <button id="registerBtn" type="button" class="btn btn-primary">Submit</button>
+            <button id="registerBtn" type="button" class="btn btn-primary">Register<i id="loading" class="fa fa-spinner fa-spin"></i></button>
             <button onclick="location.href='/'" type="button" class="btn btn-light">Sign In</button>
         </form>
     </div>
@@ -111,6 +131,29 @@
     </script>
     <script src="./controller.js"></script>
     <script type="text/javascript" src="./jquery.min.js"></script>
+    <script>
+        /* this is event listener to remove error messages */
+        /* document.getElementById('email').addEventListener('change', (e) => {
+            document.getElementById('register-form-invalid').style.display = 'none';
+            document.getElementById('register-failed').style.display = 'none';
+            document.getElementById('register-success').style.display = 'none';
+        });
+        document.getElementById('password').addEventListener('change', (e) => {
+            document.getElementById('register-form-invalid').style.display = 'none';
+            document.getElementById('register-failed').style.display = 'none';
+            document.getElementById('register-success').style.display = 'none';
+        });
+        document.getElementById('confirm-password').addEventListener('change', (e) => {
+            document.getElementById('register-form-invalid').style.display = 'none';
+            document.getElementById('register-failed').style.display = 'none';
+            document.getElementById('register-success').style.display = 'none';
+        }); */
+        function hideErrorMessages() {
+            document.getElementById('register-form-invalid').style.display = 'none';
+            document.getElementById('register-failed').style.display = 'none';
+            document.getElementById('register-success').style.display = 'none';
+        }
+    </script>
 </body>
 
 </html>

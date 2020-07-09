@@ -87,6 +87,7 @@ body {
     border-radius: 5px;
     border: none;
     display: flex;
+    padding: 0px;
     margin: 2px 0px;
 }
 
@@ -104,16 +105,31 @@ body {
     width: 85% !important;
     display: inline-flex;
 }
-
 .input-group-prepend {
     width: 27% !important;
+}
+
+#comment-panel .input-group-prepend {
+    width: 18% !important;
 }
 
 .custom-file {
     width: 100%;
     height: 100% !important;
 }
-
+#commentBtn img {
+    height: 24px;
+    width: auto;
+}
+#commentBtn {
+    margin: auto;
+    background-color: transparent;
+    border: none;
+}
+#commentBtn:hover {
+    background-color: transparent;
+    border: none;
+}
 .custom-file-input {
     height: 100% !important;
 }
@@ -126,9 +142,12 @@ body {
 .custom-file-label::after {
     display: none;
 }
-
-textarea {
-    min-height: 65px !important;
+textarea.form-control {
+    min-height: 65px;
+}
+#comment-panel textarea.form-control {
+    height: 42px;
+    min-height: 42px;
 }
 
 #post-panel .comment-tab {
@@ -137,8 +156,7 @@ textarea {
 
 .comment-picture {
     display: inline-block;
-    margin-top: auto;
-    margin-right: 10px;
+    margin: 5px 10px 5px 5px;
 }
 
 .content {
@@ -150,10 +168,22 @@ textarea {
     height: 40px !important;
     display: inline-block;
 }
+.comment-tab img {
+    height: 24px;
+}
 .posted-on {
     display: inline-block;
     float: right;
 }
 span.date {
     font-weight: 600;
+}
+.list-group .card {
+    background-color: white !important;
+}
+.comment-text {
+    display: flex;
+}
+.share-post {
+    padding: 10px 20px;
 }

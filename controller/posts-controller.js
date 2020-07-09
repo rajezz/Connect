@@ -89,7 +89,7 @@ exports.getposts = function (req, res) {
             post_id = parseInt(post_id);
             //open connection
             var connection = mySql.createConnection(connectionParams);
-            connection.query('select posts.*, comments.content, comments.comment_pic, comments.user_id, comments.username from posts left JOIN comments ON posts.post_id=comments.post_id where posts.post_id <= ? and posts.post_id > ?', [post_id - start_index, post_id - start_index - 20], function (err, result, field) {
+            connection.query('select posts.*, comments.content, comments.comment_pic, comments.user_id, comments.username, comments.user_pic from posts left JOIN comments ON posts.post_id=comments.post_id where posts.post_id <= ? and posts.post_id > ?', [post_id - start_index, post_id - start_index - 20], function (err, result, field) {
                 connection.end();
                 if (result) {
                     var last_post_id = 0;
@@ -102,9 +102,10 @@ exports.getposts = function (req, res) {
                                 content: post.content,
                                 post_id: post.post_id,
                                 username: post.username,
+                                user_pic: post.user_pic,
                             });
                         } else {
-                            if (post.content) {
+                            if (post.content || post.comment_pic) {
                                 postdetails = {
                                     image: post.picture,
                                     desc: post.description,
@@ -118,6 +119,7 @@ exports.getposts = function (req, res) {
                                         content: post.content,
                                         post_id: post.post_id,
                                         username: post.username,
+                                        user_pic: post.user_pic,
                                     }],
                                 };
                             } else {
@@ -239,8 +241,9 @@ exports.commentPost = function (req, res) {
         post_id: req.query.post_id,
         user_id: req.query.user_id,
         comment: req.query.comment,
-        pic_name: baseUrl + 'comments/' + req.query.pic_name,
+        pic_name: req.query.pic_name != undefined ? baseUrl + 'comments/' + req.query.pic_name : null,
         username: req.query.username,
+        user_pic: req.query.user_pic,
     };
     async.waterfall([
         function (callback) {
@@ -257,7 +260,7 @@ exports.commentPost = function (req, res) {
             if (result) {
                 //open connection
                 var connection = mySql.createConnection(connectionParams);
-                connection.query('insert into comments (post_id, user_id, comment_pic, content, username) values (?, ?, ?, ?, ?)', [commentDetails.post_id, commentDetails.user_id, commentDetails.pic_name, commentDetails.comment, commentDetails.username], function (insert_err, insert_result, insert_field) {
+                connection.query('insert into comments (post_id, user_id, comment_pic, content, username, user_pic) values (?, ?, ?, ?, ?, ?)', [commentDetails.post_id, commentDetails.user_id, commentDetails.pic_name, commentDetails.comment, commentDetails.username, commentDetails.user_pic], function (insert_err, insert_result, insert_field) {
                     connection.end();
                     callback(null, 'success');
                 });
@@ -271,7 +274,7 @@ exports.commentPost = function (req, res) {
 
 exports.createPost = function (req, res) {
     var postDetails = {
-        picture: baseUrl + 'posts/' + req.query.pic_name,
+        picture: req.query.pic_name != undefined ? baseUrl + 'posts/' + req.query.pic_name : null,
         description: req.query.post_desc,
     };
     //open connection
