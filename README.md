@@ -12,19 +12,19 @@ This application is created with NodeJs (ExpressJs) as back-end, MySql for datab
 
 ### Database setup
 
-* Create a mysql connection with below settings in [`MySql Workbench`](https://www.mysql.com/downloads/).
+* Create a mysql connection with below settings in [`MySql Community server`](https://dev.mysql.com/downloads/mysql/).
     * username: `root`
     * password: `root`
     * host: `localhost`
     * port: `3306`
 
-* Run the below command in MySql Workbench to create a database with default name `TestDB`.
+* Run the below command in MySql Workbench to create a database with name `TestDB`.
 
 ```cmd
 create database TestDB;
 ```
 
->> (Database name must be `TestDB`).
+> (Database name must be `TestDB`).
 
 * Switch to newly created database by running below command:
 
@@ -32,13 +32,13 @@ create database TestDB;
 use TestDB;
 ```
 
-* Run below command to create necessary tables for this WebApp:
+* Run below command to create necessary tables for the application:
 
 ```cmd
 source <query.sql file path> Eg.C:\Project\dbdata\query.sql
 ```
 
->> It will be located inside `<root directory>\dbdata\query.sql`.
+> It will be located inside `<root directory>\dbdata\query.sql`.
 
 ### Running WebApp
 
@@ -54,7 +54,7 @@ Since we have created a new database we need to populate them with data using `f
 
 Click [`here`](http://localhost:3000/generateposts) to Generate posts.
 
->> Every time on clicking above link it will create 100 posts.
+> Every time on clicking above link it will create 100 posts.
 
 ### Functionality
 
