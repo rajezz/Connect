@@ -1,2 +1,2 @@
 # socialconnect
- a place to share posts and comments
+ a place where you can share posts and comments with your friends
