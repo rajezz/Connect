@@ -40,8 +40,6 @@ source <query.sql file path> Eg.C:\Project\dbdata\query.sql
 
 >> It will be located inside `<root directory>\dbdata\query.sql`.
 
-Database setup is done.
-
 ### Running WebApp
 
 Open command terminal and head back to WebApp root directory where `index.js` file is located and execute below command:
