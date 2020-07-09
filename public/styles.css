@@ -4,8 +4,11 @@ html {
 
 body {
     height: 100% !important;
+    color: #797979 !important;
 }
-
+button, input {
+    color: #797979 !important;
+}
 .container-fluid {
     height: calc(100% - 60px) !important;
     overflow: hidden;
@@ -107,9 +110,11 @@ body {
 }
 
 .input-group-prepend {
-    width: 27% !important;
+    width: 31% !important;
 }
-
+textarea:focus, textarea:focus {
+    box-shadow: none !important;
+}
 #comment-panel .input-group-prepend {
     width: 18% !important;
 }
@@ -149,7 +154,9 @@ body {
 }
 
 textarea.form-control {
-    min-height: 65px;
+    min-height: 38px;
+    height: 38px;
+    
 }
 
 #comment-panel textarea.form-control {
@@ -223,16 +230,19 @@ p.email {
     font-size: 13px;
 }
 p.dob {
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 13px;
     margin-top: 11px !important;
-    margin-bottom: 2px;
+    margin-bottom: 7px;
 }
 p.ph-no {
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 13px;
 }
 .profile-details img {
-    width: 16px !important;
-    margin: 1px 7px 1px 0px;
+    width: auto !important;
+    height: 16px;
+    margin: -2px 10px 0px 0px;
     border-radius: 0px !important;
 }
 a.navbar-brand {
@@ -242,7 +252,13 @@ a.navbar-brand {
 #profile-pic-holder {
     border-radius: 100px;
     overflow: hidden;
-    height: 160px;
+    width: 100%;
+    height: auto;
+    max-height: 160px;
     margin: 26px 10px;
-    width: 160px;
+    max-width: 160px;
+    margin: 20px auto;
+}
+#navbar-collapse .nav-link {
+    color: #797979 !important;
 }

@@ -80,6 +80,7 @@ function SetSessionStorage(user) {
 function OnHomePageLoad() {
     if (validateUser()) {
         fetchPosts();
+        SetProfileDetails();
     } else {
         window.location.assign('/');
     }
@@ -107,7 +108,6 @@ function SetProfileDetails() {
     $('#profile-details').append($ProfileDetails);
 }
 function fetchPosts() {
-    SetProfileDetails();
     document.getElementById('fetching').style.display = 'block';
     start_index = currentPosts.length;
     route.get('/getposts', { start_index: start_index }).done(function (response) {

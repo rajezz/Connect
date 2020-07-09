@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="icon" href="./assets/favicon.svg" sizes="16x16 32x32" type="image/svg">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Test App</title>
+    <title>Connect</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
@@ -13,6 +14,7 @@
 
     </script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
     <style>
         .login-panel {
             width: 500px !important;
@@ -28,15 +30,28 @@
             margin: 0px 10px 0px 0px;
             color: red !important;
             display: none;
+            position: absolute;
         }
 
         .btn {
-            margin-top: 20px;
+            margin-top: 21px;
         }
 
         .heading {
-            font-size: 30px;
-            font-weight: 600;
+            color: #007bff;
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: -3px;
+            margin-bottom: 11px;
+            line-height: 20px;
+            font-family: 'Open Sans';
+        }
+
+        .form-group label {
+            display: inline-block;
+            margin-bottom: .5rem;
+            line-height: 16px;
+            height: 16px;
         }
 
         .form-group label:after,
@@ -64,6 +79,14 @@
         .custom-file-label {
             box-shadow: none !important;
         }
+
+        .form-group {
+            margin-bottom: 11px;
+        }
+
+        .input-group {
+            margin-top: 21px;
+        }
     </style>
 </head>
 
@@ -71,7 +94,7 @@
     <div class="login-panel">
         <form>
             <div class="heading">
-                Register
+                Connect
             </div>
             <div class="form-group">
                 <label for="email">Email address</label>
@@ -121,15 +144,15 @@
                 </div>
             </div>
             <small id="register-form-invalid" class="form-text">
-                Please fill all field.
+                Please fill required fields.
             </small>
             <small id="register-failed" class="form-text">
-                Registration Failed. Email id already exist
+                Email id already exist.
             </small>
             <small id="register-success" class="form-text success">
                 Sucessfully Registered. Please sign in.
             </small>
-            <button id="registerBtn" type="button" class="btn btn-primary">Register<i id="loading"
+            <button id="registerBtn" type="button" class="btn btn-primary">Sign Up<i id="loading"
                     class="fa fa-spinner fa-spin"></i></button>
             <button onclick="location.href='/'" type="button" class="btn btn-light">Sign In</button>
         </form>

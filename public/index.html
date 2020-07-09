@@ -4,8 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="icon" href="./assets/favicon.svg" sizes="16x16 32x32" type="image/svg">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Test App</title>
+  <title>Connect</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -13,6 +14,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
   </script>
+  <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
   <style>
     .login-panel {
       width: 500px !important;
@@ -25,7 +27,7 @@
     }
 
     .btn {
-      margin-top: 20px;
+      margin-top: 21px;
     }
 
     button:active,
@@ -39,6 +41,7 @@
       margin: 0px 10px 0px 0px;
       color: red !important;
       display: none;
+      position: absolute;
     }
 
     .success {
@@ -50,8 +53,24 @@
     }
 
     .heading {
-      font-size: 30px;
-      font-weight: 600;
+      color: #007bff;
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: -3px;
+      margin-bottom: 11px;
+      line-height: 20px;
+      font-family: 'Open Sans';
+    }
+
+    .form-group {
+      margin-bottom: 11px;
+    }
+
+    label {
+      display: inline-block;
+      margin-bottom: .5rem;
+      line-height: 16px;
+      height: 16px;
     }
 
     .form-group.required label:after {
@@ -75,10 +94,10 @@
   <div class="login-panel">
     <form>
       <div class="heading">
-        Login
+        Connect
       </div>
       <div class="form-group required">
-        <label for="email">Email address</label>
+        <label for="email">Email</label>
         <input type="email" class="form-control" name="email" id="email" onchange="hideErrorMessages()"
           aria-describedby="emailHelp" placeholder="Enter email">
         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
@@ -92,11 +111,11 @@
         Please enter email and password.
       </small>
       <small id="login-failed" class="form-text text-muted">
-        Login failed. Email ID and/or password is incorrect or email ID is not registered.
+        Email ID and/or password is incorrect.
       </small>
-      <button id="signinBtn" type="button" class="btn btn-primary">Signin<i id="loading"
+      <button id="signinBtn" type="button" class="btn btn-primary">Sign In<i id="loading"
           class="fa fa-spinner fa-spin"></i></button>
-      <button onclick="location.href='/register'" type="button" class="btn btn-light">Sign up</button>
+      <button onclick="location.href='/register'" type="button" class="btn btn-light">Sign Up</button>
     </form>
   </div>
 
@@ -109,15 +128,6 @@
   <script src="./controller.js"></script>
   <script type="text/javascript" src="./jquery.min.js"></script>
   <script>
-    document.getElementById('email').addEventListener('change', (e) => {
-      document.getElementById('login-form-invalid').style.display = 'none';
-      document.getElementById('login-failed').style.display = 'none';
-    });
-    document.getElementById('password').addEventListener('change', (e) => {
-      document.getElementById('login-form-invalid').style.display = 'none';
-      document.getElementById('login-failed').style.display = 'none';
-    });
-
     function hideErrorMessages() {
       document.getElementById('login-form-invalid').style.display = 'none';
       document.getElementById('login-failed').style.display = 'none';
