@@ -7,7 +7,7 @@ var profile_storage = multer.diskStorage({
 
   destination: function (req, file, callback) {
 
-    var dirPath = 'uploads/profile/';
+    var dirPath = 'uploads/profiles/';
     if (!fs.existsSync(dirPath))
       fs.mkdirSync(dirPath);
     callback(null, dirPath);

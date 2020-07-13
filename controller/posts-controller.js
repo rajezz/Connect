@@ -4,8 +4,16 @@ const path = require('path');
 var express = require('express');
 const faker = require('faker');
 const async = require('async');
+const mongoose = require('mongoose');
+const Post = require('../model/Post');
+const User = require('../model/User');
 
 const baseUrl = 'http://localhost:3000/uploads/';
+
+mongoose.connect('mongodb+srv://user:FyN07x9tBcWQHUgN@cluster0.dfo5g.mongodb.net/ConnectDB?retryWrites=true&w=majority', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
 const remoteConnectionParams = {
     host: 'bdwkslwwzlyvmttitazj-mysql.services.clever-cloud.com',
@@ -24,7 +32,21 @@ const connectionParams = {
 exports.getposts = function (req, res) {
     var posts = [];
     var start_index = parseInt(req.query.start_index);
-    async.waterfall([
+    
+    //method implemented with mongodb
+    Post.count().then(count => {
+        Post.find().skip(start_index).limit(20).sort({
+            _id: -1
+        }).then(document => {
+            res.send({
+                posts: document,
+            });
+        });
+    });
+
+
+    //method implemented with mysql
+    /* async.waterfall([
         function (callback) {
             //open connection
             var connection = mySql.createConnection(connectionParams);
@@ -95,8 +117,10 @@ exports.getposts = function (req, res) {
             });
         },
     ], function (err, posts) {
-        res.send({ posts: posts });
-    });
+        res.send({
+            posts: posts
+        });
+    }); */
 };
 
 
@@ -104,27 +128,46 @@ exports.generateposts = function (req, res) {
     for (let i = 0; i < 100; i++) {
         generatepost();
     }
-    res.send({ message: 'posts generated' });
+    res.send({
+        message: 'posts generated'
+    });
 }
 
 function generatepost() {
     var postdata = {
         picture: faker.fake('{{image.image}}'),
         description: faker.fake('{{lorem.paragraph}}'),
+        comment: [],
     };
 
-    //open connection
+    //method implemented with mongodb
+    var newPost = new Post(postdata);
+
+    newPost.save();
+
+
+    //method implemented with mysql
+    /* //open connection
     var connection = mySql.createConnection(connectionParams);
 
     connection.query('insert into  posts (picture, description) values (?, ?)', [postdata.picture, postdata.description], (err, result, field) => {
-        if (err) { }
-    });
+        if (err) {}
+    }); */
 }
 
 exports.likePost = function (req, res) {
     var post_id = req.query.post_id;
     var user_id = req.query.user_id;
-    async.waterfall([
+    //method implemented with mongodb
+    Post.find({ _id: post_id, }).then(document => {
+        if (document) {
+            
+        }
+    })
+
+
+    //method implemented with mysql
+    /* async.waterfall([
         function (callback) {
             //open connection
             var connection = mySql.createConnection(connectionParams);
@@ -185,8 +228,11 @@ exports.likePost = function (req, res) {
         }
     ], function (err, result, process) {
         console.log(result);
-        res.send({ message: result, process: process, });
-    });
+        res.send({
+            message: result,
+            process: process,
+        });
+    }); */
 };
 
 exports.commentPost = function (req, res) {
@@ -221,7 +267,9 @@ exports.commentPost = function (req, res) {
         }
     ], function (err, result) {
         console.log(result);
-        res.send({ message: result });
+        res.send({
+            message: result
+        });
     });
 };
 
@@ -234,6 +282,8 @@ exports.createPost = function (req, res) {
     var connection = mySql.createConnection(connectionParams);
     connection.query('insert into posts (picture , description) values (?, ?)', [postDetails.picture, postDetails.description], function (err, result, field) {
         connection.end();
-        res.send({ message: result });
+        res.send({
+            message: result
+        });
     });
 };

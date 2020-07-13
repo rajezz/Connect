@@ -1,9 +1,10 @@
-
-
 const body_parser = require('body-parser');
 const mySql = require('mysql');
 const path = require('path');
 var express = require('express');
+const mongoose = require('mongoose');
+const Post = require('../model/Post');
+const User = require('../model/User');
 
 var image_uploader = require('../controller/uploader');
 var post_controller = require('../controller/posts-controller');
@@ -11,6 +12,10 @@ var post_controller = require('../controller/posts-controller');
 var router = express.Router();
 
 const baseUrl = 'http://localhost:3000/uploads/';
+
+mongoose.connect('mongodb+srv://user:FyN07x9tBcWQHUgN@cluster0.dfo5g.mongodb.net/ConnectDB?retryWrites=true&w=majority');
+
+//FyN07x9tBcWQHUgN
 
 const remoteConnectionParams = {
     host: 'bdwkslwwzlyvmttitazj-mysql.services.clever-cloud.com',
@@ -40,7 +45,28 @@ router.get('/login', function (req, res) {
     let user_mail = req.query.email;
     let password = req.query.password;
 
-    //open connection
+    //method implemented with mongodb
+    User.findOne({
+        email: user_mail,
+        password: password,
+    }).then(document => {
+        if (document) {
+            res.send({
+                message: 'login success',
+                user: document,
+            });
+        } else {
+            res.send({
+                message: 'email not exists',
+                user: undefined,
+            });
+        }
+    }).catch(err => {
+        console.log(err);
+    });
+
+    //method implemented with mysql
+    /* //open connection
     var connection = mySql.createConnection(connectionParams);
 
     if (user_mail && password) {
@@ -61,7 +87,7 @@ router.get('/login', function (req, res) {
                 res.send({ message: 'email not exists', user: undefined });
             }
         });
-    }
+    } */
 });
 
 router.get('/register-user', function (req, res) {
@@ -75,7 +101,28 @@ router.get('/register-user', function (req, res) {
         phone_no: req.query.phone_no,
     };
 
-    //open connection
+    //method implemented with mongodb
+    User.findOne({
+        email: user_details.email,
+    }).then(document => {
+        if (document) {
+            res.send({
+                message: 'email exists',
+                user: document,
+            });
+        } else {
+            var newUser = new User(user_details);
+            newUser.save();
+            res.send({
+                message: 'added successfully'
+            });
+        }
+    }).catch(err => {
+        console.log(err);
+    });
+
+    //method implemented with mysql
+    /* //open connection
     var connection = mySql.createConnection(connectionParams);
 
     if (user_details.email) {
@@ -94,7 +141,7 @@ router.get('/register-user', function (req, res) {
                 });
             }
         });
-    }
+    } */
 
     //res.end();
 });
