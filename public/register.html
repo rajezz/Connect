@@ -140,7 +140,7 @@
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="profile-pic" onchange="hideErrorMessages()"
                         aria-describedby="profile-pic-group">
-                    <label class="custom-file-label" for="profile-pic">Choose file</label>
+                    <label id="image-name" class="custom-file-label" for="profile-pic">Choose file</label>
                 </div>
             </div>
             <small id="register-form-invalid" class="form-text">
@@ -167,6 +167,13 @@
     <script src="./controller.js"></script>
     <script type="text/javascript" src="./jquery.min.js"></script>
     <script>
+        document.getElementById('profile-pic').addEventListener('change', (e) => {
+            if (event.currentTarget.files[0]) {
+                document.getElementById('image-name').innerHTML = event.currentTarget.files[0].name;
+            } else {
+                document.getElementById('image-name').innerHTML = 'Choose file';
+            }
+        });
         function hideErrorMessages() {
             document.getElementById('register-form-invalid').style.display = 'none';
             document.getElementById('register-failed').style.display = 'none';
