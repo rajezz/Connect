@@ -1,19 +1,64 @@
-const express = require('express');
-const session = require('express-session');
-const body_parser = require('body-parser');
-const mySql = require('mysql');
-const path = require('path');
-const faker = require('faker');
-const router = require('./router/route');
+const express = require("express");
+const body_parser = require("body-parser");
+const mongoose = require("mongoose");
+const path = require("path");
+const router = require("./router/route");
+const http = require("http");
+const cors = require("cors");
 
-var port = process.env.PORT || 3000;
-var app = express();
+require("dotenv").config();
 
-app.use(body_parser.urlencoded({ extended: true, }));
+const port = normalizePort();
+const app = express();
+
+app.use(body_parser.urlencoded({ extended: true }));
 app.use(body_parser.json());
 
 // routes...
-app.use('/', router);
-app.use(express.static(path.join(__dirname + '/public')));
+app.use("/", router);
+app.use(express.static(path.join(__dirname + "/public")));
 
-app.listen(port);
+//To allow cross-origin requests
+app.use(cors());
+
+connectMongoDB();
+
+const server = http.createServer(app);
+
+app.set("port", port);
+
+server.listen(port);
+server.on("error", onError);
+server.on("listening", onListening);
+
+function onListening() {
+	console.log("App listening on ", server.address());
+}
+
+function onError(error) {
+	console.error("Couldn't start the server. Error > ", error);
+}
+
+function normalizePort() {
+	if (typeof process.env.PORT === "number") {
+		return process.env.PORT;
+	} else {
+		return 3000;
+	}
+}
+
+function connectMongoDB() {
+	const mongoUri = process.env.MONGO_URI;
+	if (mongoUri === "") {
+		console.error("Can't find Mongo URI in ENV.");
+		process.exit(1);
+	}
+	mongoose
+		.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
+		.then(() => {
+			console.log("Connected to the MongoDB!");
+		})
+		.catch((error) => {
+			console.error("Can't connect to the MongoDB. Error > ", error);
+		});
+}

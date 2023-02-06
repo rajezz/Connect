@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const { MongoProvider } = require("../lib/MongoProvider");
+
 var Post = mongoose.Schema({
     picture: {
         type: String,
@@ -25,4 +27,15 @@ var Post = mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("Post", Post);
+const PostModel = mongoose.model("Post", Post);
+
+class PostProvider extends MongoProvider {
+	constructor() {
+		super(PostModel);
+	}
+}
+
+module.exports = {
+	PostModel,
+	PostProvider
+};

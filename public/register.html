@@ -92,7 +92,7 @@
 
 <body>
     <div class="login-panel">
-        <form>
+        <form onsubmit="validateAndSubmitForm()">
             <div class="heading">
                 Connect
             </div>
@@ -152,7 +152,7 @@
             <small id="register-success" class="form-text success">
                 Sucessfully Registered. Please sign in.
             </small>
-            <button id="registerBtn" type="button" class="btn btn-primary">Sign Up<i id="loading"
+            <button id="registerBtn" type="submit" class="btn btn-primary">Sign Up<i id="loading"
                     class="fa fa-spinner fa-spin"></i></button>
             <button onclick="location.href='/'" type="button" class="btn btn-light">Sign In</button>
         </form>
@@ -165,20 +165,10 @@
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
     </script>
     <script src="./controller.js"></script>
+    <script src="./register.js"></script>
     <script type="text/javascript" src="./jquery.min.js"></script>
     <script>
-        document.getElementById('profile-pic').addEventListener('change', (e) => {
-            if (event.currentTarget.files[0]) {
-                document.getElementById('image-name').innerHTML = event.currentTarget.files[0].name;
-            } else {
-                document.getElementById('image-name').innerHTML = 'Choose file';
-            }
-        });
-        function hideErrorMessages() {
-            document.getElementById('register-form-invalid').style.display = 'none';
-            document.getElementById('register-failed').style.display = 'none';
-            document.getElementById('register-success').style.display = 'none';
-        }
+        
     </script>
 </body>
 
