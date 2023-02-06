@@ -1,0 +1,11 @@
+{
+	"extends": ["eslint:recommended", "prettier"],
+	"plugins": ["node", "prettier"],
+	"parserOptions": {
+		"ecmaVersion": 11
+	},
+	"rules": {
+		"semi": [2, "always"],
+		"quotes": [1, "double"]
+	}
+}
